@@ -53,15 +53,24 @@ func (c *Conn) Dial(url, subprotocol string) error {
 		defer c.close()
 
 		for {
-			var msg = make([]byte, 512)
-			var n int
-			if n, err = c.ws.Read(msg); err != nil {
+			// var msg = make([]byte, 512)
+			// var n int
+			// if n, err = c.ws.Read(msg); err != nil {
+			// 	if c.OnError != nil {
+			// 		c.OnError(err)
+			// 	}
+			// 	return
+			// }
+			// c.onMsg(msg[:n])
+
+			var msg []byte
+			if err := websocket.Message.Receive(c.ws, &msg); err != nil {
 				if c.OnError != nil {
 					c.OnError(err)
 				}
 				return
 			}
-			c.onMsg(msg[:n])
+			c.onMsg(msg)
 		}
 	}()
 
