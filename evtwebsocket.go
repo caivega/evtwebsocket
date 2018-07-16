@@ -124,6 +124,16 @@ func (c *Conn) onMsg(msg []byte) {
 	}
 }
 
+//Close the websocket connection manually
+func (c *Conn) Close() error {
+	if !c.closed {
+		err := c.ws.Close()
+		c.closed = true
+		return err
+	}
+	return nil
+}
+
 func (c *Conn) close() {
 	c.ws.Close()
 	c.closed = true
