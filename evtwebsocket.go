@@ -2,6 +2,7 @@ package evtwebsocket
 
 import (
 	"errors"
+	"fmt"
 	"time"
 
 	"golang.org/x/net/websocket"
@@ -132,6 +133,19 @@ func (c *Conn) Close() error {
 		return err
 	}
 	return nil
+}
+
+//ReDial the websocket again and again
+func (c *Conn) ReDial() {
+	fmt.Println("reconnecting to jingtum...")
+	if c.Reconnect {
+		for {
+			if err := c.Dial(c.url, c.subprotocol); err == nil {
+				break
+			}
+			time.Sleep(time.Second * 1)
+		}
+	}
 }
 
 func (c *Conn) close() {
